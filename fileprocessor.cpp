@@ -111,11 +111,19 @@ void FileProcessor::processSingleFile(const QString &filePath) {
         uchar *data = reinterpret_cast<uchar*>(buffer.data());
         int len = buffer.size();
         int i = 0;
+
+        uint8_t keyBytes[8];
+        std::memcpy(keyBytes, &key, 8);
+
         for (; i <= len - 8; i += 8) {
-            *reinterpret_cast<quint64*>(data + i) ^= key;
+            uint64_t chunk;
+            std::memcpy(&chunk, data + i, 8);
+            chunk ^= key;
+            std::memcpy(data + i, &chunk, 8);
         }
+
         for (; i < len; ++i) {
-            data[i] ^= (reinterpret_cast<uchar*>(&key))[i % 8];
+            data[i] ^= keyBytes[i % 8];
         }
 
         outFile.write(buffer);
