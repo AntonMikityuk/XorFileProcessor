@@ -20,6 +20,21 @@ void FileProcessor::process() {
     m_isPaused = false;
 
     QDir inputDir(m_settings.inputPath);
+
+    if (!inputDir.exists()) {
+        emit statusMessage("Error, input path does not exist");
+        emit finished();
+        return;
+    }
+
+    QDir outputDir(m_settings.outputPath);
+
+    if (!outputDir.exists()) {
+        emit statusMessage("Error: output path does not exist");
+        emit finished();
+        return;
+    }
+
     QStringList filters = m_settings.mask.split(QRegularExpression("[,; ]+"), Qt::SkipEmptyParts);
     QFileInfoList files = inputDir.entryInfoList(filters, QDir::Files);
 

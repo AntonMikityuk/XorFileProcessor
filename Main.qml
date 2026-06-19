@@ -123,7 +123,7 @@ ApplicationWindow {
                 text: "Status: " + backend.status
                 font.bold: true
                 font.pixelSize: 14
-                color: backend.status === "Stopped" ? "#e74c3c" : "#2980b9"
+                color: (backend.status.includes("Error") || backend.status === "Stopped") ? "#e74c3c" : "#2980b9"
             }
         }
 

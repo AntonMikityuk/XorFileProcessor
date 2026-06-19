@@ -97,7 +97,6 @@ void Backend::stop() {
         m_worker->requestStop();
     }
     else {
-        // Если воркер НЕ работал (ждали таймер), сбрасываем всё ПРЯМО СЕЙЧАС
         m_isBusy = false;
         m_isRunning = false;
         m_isPaused = false;
@@ -122,7 +121,7 @@ void Backend::onWorkerFinished() {
     }
     m_thread = nullptr;
 
-    if (m_status != "Stopped") {
+    if (m_status != "Stopped" && !m_status.startsWith("Error")) {
         m_status = "Finished";
         emit statusChanged();
     }
